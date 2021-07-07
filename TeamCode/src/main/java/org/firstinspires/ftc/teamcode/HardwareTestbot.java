@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 
-public class  HardwareTestbot
+public class HardwareTestbot
 {
     /* Public OpMode members. */
     public DcMotor  leftFront = null;
@@ -41,9 +41,7 @@ public class  HardwareTestbot
     public ModernRoboticsI2cRangeSensor rangeFront = null;
     public ModernRoboticsI2cRangeSensor rangeBack = null;
     public ModernRoboticsI2cGyro MR_Gyro = null;
-    public BNO055IMU imu = null;
 
-    public Orientation angles;
     public float zOrientation;
     public static double globalAngle;
     public static final double ONEONEFIVEZERO_MOTOR_TICK_COUNT = 145.6;
@@ -90,73 +88,142 @@ public class  HardwareTestbot
         hwMap = ahwMap;
 
 
-        // Define and Initialize Motors
-        leftFront  = hwMap.dcMotor.get("frontL");
-        leftBack  = hwMap.dcMotor.get("backL");
-        rightFront = hwMap.dcMotor.get("frontR");
-        rightBack = hwMap.dcMotor.get("backR");
-        arm = hwMap.dcMotor.get("arm");
-        intake = hwMap.dcMotor.get("intake");
-        conveyor = hwMap.dcMotor.get("conveyor");
-        shooter = hwMap.dcMotor.get("shooter");
+    // Define and Initialize Motors
+    leftFront  = hwMap.dcMotor.get("frontL");
+    leftBack  = hwMap.dcMotor.get("backL");
+    rightFront = hwMap.dcMotor.get("frontR");
+    rightBack = hwMap.dcMotor.get("backR");
+    arm = hwMap.dcMotor.get("arm");
+    intake = hwMap.dcMotor.get("intake");
+    conveyor = hwMap.dcMotor.get("conveyor");
+    shooter = hwMap.dcMotor.get("shooter");
 
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        arm.setDirection(DcMotor.Direction.REVERSE);
-        conveyor.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-        // Set all motors to zero power
-        leftFront.setPower(ZERO);
-        leftBack.setPower(ZERO);
-        rightFront.setPower(ZERO);
-        rightBack.setPower(ZERO);
-        arm.setPower(ZERO);
-
-
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+    leftFront.setDirection(DcMotor.Direction.REVERSE);
+    leftBack.setDirection(DcMotor.Direction.REVERSE);
+    rightFront.setDirection(DcMotor.Direction.FORWARD);
+    rightBack.setDirection(DcMotor.Direction.REVERSE);
+    arm.setDirection(DcMotor.Direction.REVERSE);
+    conveyor.setDirection(DcMotor.Direction.REVERSE);
 
 
 
+    // Set all motors to zero power
+    leftFront.setPower(ZERO);
+    leftBack.setPower(ZERO);
+    rightFront.setPower(ZERO);
+    rightBack.setPower(ZERO);
+    arm.setPower(ZERO);
 
-        color_sensor = hwMap.get(ModernRoboticsI2cColorSensor.class, "MR_color_sensor");
-        rangeSide = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_side");
-        rangeLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_left");
-        rangeFront = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_front");
-        rangeBack = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_back");
-        MR_Gyro = hwMap.get(ModernRoboticsI2cGyro.class, "MR_Gyro");
 
-        //MR_Gyro = (ModernRoboticsI2cGyro) sensorGyro;
+    // Set all motors to run without encoders.
+    // May want to use RUN_USING_ENCODERS if encoders are installed.
+    leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+    leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+    rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+    rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+    arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
 
-        // Define and Initialize Motors
-        gripper  = hwMap.servo.get("gripper");
-        pusher = hwMap.servo.get("pusha");
 
-        pusher.setDirection(Servo.Direction.REVERSE);
+
+
+    color_sensor = hwMap.get(ModernRoboticsI2cColorSensor.class, "MR_color_sensor");
+    rangeSide = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_side");
+    rangeLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_left");
+    rangeFront = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_front");
+    rangeBack = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MR_range_back");
+    MR_Gyro = hwMap.get(ModernRoboticsI2cGyro.class, "MR_Gyro");
+
+    //MR_Gyro = (ModernRoboticsI2cGyro) sensorGyro;
+
+    // Define and Initialize Motors
+    gripper  = hwMap.servo.get("gripper");
+    pusher = hwMap.servo.get("pusha");
+
+    pusher.setDirection(Servo.Direction.REVERSE);
 
 
 //setPosition actually sets the servo's position and moves it
-        gripper.setPosition(0);
-        pusher.setPosition(0.41);
+    gripper.setPosition(0);
+    pusher.setPosition(0.41);
 
-    public void initialize_IMU() {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        imu.initialize(parameters);
+
+
+
+
+
+
+    //// BNO055IMU.Parameters IMUparameters;
+
+        // Create a new IMU parameters object
+    //// IMUparameters = new BNO055IMU.Parameters();
+        // Set the IMU mode to IMU so it automatically calibrates itself
+    //// IMUparameters.mode = BNO055IMU.SensorMode.IMU;
+        // Use degrees as our angle unit
+    //// IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        // Use meters per second as a unit of accelerat
+    //// IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        // Warn driver this may take several seconds!
+        // telemetry.addData("Status", "Init IMU...please wait");
+        // telemetry.update();
+        // Intialize IMU using these parameters
+    //// imu.initialize(IMUparameters);
+        // Tell drive that init is done
+        // telemetry.addData("Status", "IMU initialized");
+        // telemetry.update();
+
+    //Init_IMU();
     }
 
-    public void gyro_leftstrafe(double speed) {
+    public void init_IMU() {
+
+        BNO055IMU.Parameters IMUparameters;
+
+        // Create a new IMU parameters object
+        IMUparameters = new BNO055IMU.Parameters();
+        // Set the IMU mode to IMU so it automatically calibrates itself
+        IMUparameters.mode = BNO055IMU.SensorMode.IMU;
+        // Use degrees as our angle unit
+        IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        // Use meters per second as a unit of acceleration
+        IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        // Warn driver this may take several seconds!
+        // telemetry.addData("Status", "Init IMU...please wait");
+        // telemetry.update();
+        // Intialize IMU using these parameters
+        // Tell drive that init is done
+        // telemetry.addData("Status", "IMU initialized");
+        // telemetry.update();
+  }
+
+    //public void init(InitIMU imuInit) {
+        /* code */
+
+        //InitIMU = imuInit;
+        BNO055IMU.Parameters IMUparameters;
+
+        // // Create a new IMU parameters object
+        // IMUparameters = new BNO055IMU.Parameters();
+        // // Set the IMU mode to IMU so it automatically calibrates itself
+        // IMUparameters.mode = BNO055IMU.SensorMode.IMU;
+        // // Use degrees as our angle unit
+        // IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        // // Use meters per second as a unit of acceleration
+        // IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        // // Warn driver this may take several seconds!
+        // // telemetry.addData("Status", "Init IMU...please wait");
+        // // telemetry.update();
+        // // Intialize IMU using these parameters
+        // imu.initialize(IMUparameters);
+        // // Tell drive that init is done
+        // // telemetry.addData("Status", "IMU initialized");
+        // // telemetry.update();
+
+        // Init_IMU();
+
+    // Get the Z axis orientation of the IMU
+
+    public void gyro_leftstrafe(double speed){
 
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -211,7 +278,7 @@ public class  HardwareTestbot
         }
     }
 
-    public void gyro_rightstrafe(double speed) {
+    public void gyro_rightstrafe(double speed){
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -285,14 +352,14 @@ public class  HardwareTestbot
         rightFront.setPower(speed);
         // Loop until the motor reaches its target
         while (leftFront.getCurrentPosition() < TargetPosition) {
-            // nothing while the robot moves forward
+          // nothing while the robot moves forward
         }
-        // if(leftFront.getCurrentPosition() == TargetPosition){
+       // if(leftFront.getCurrentPosition() == TargetPosition){
         leftFront.setPower(ZERO);
         rightBack.setPower(ZERO);
         leftBack.setPower(ZERO);
         rightFront.setPower(ZERO);
-        // }
+       // }
 
         // Sleep a quarter second to let the robot stop
     }
@@ -304,7 +371,7 @@ public class  HardwareTestbot
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void Move_to_Position_Negative(double TargetPosition, double speed) {
+     public void Move_to_Position_Negative(double TargetPosition, double speed) {
         // Reset the encoders
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -322,16 +389,16 @@ public class  HardwareTestbot
         rightFront.setPower(-speed);
         // Loop until the motor reaches its target
         while (leftFront.getCurrentPosition() > TargetPosition) {
-            // nothing while the robot moves forward
+          // nothing while the robot moves forward
         }
-        // if(leftFront.getCurrentPosition() == TargetPosition){
+       // if(leftFront.getCurrentPosition() == TargetPosition){
         leftFront.setPower(ZERO);
         rightBack.setPower(ZERO);
         leftBack.setPower(ZERO);
         rightFront.setPower(ZERO);
 
 
-        // }
+       // }
 
         // Sleep a quarter second to let the robot stop
     }
@@ -403,7 +470,7 @@ public class  HardwareTestbot
             }
         }
 
-        zero();
+        zero();       
 
 
     }
@@ -458,113 +525,113 @@ public class  HardwareTestbot
 
     public void MR_gyrostraight(double inches, double speed){
 
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double leftPower;
-        double rightPower;
-        int target = 0;
+            double leftPower;
+            double rightPower;
+            int target = 0;
 
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double rotationsNeeded = inches/CIRCUMFERENCE;
-        int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
+            double rotationsNeeded = inches/CIRCUMFERENCE;
+            int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
 
-        while(leftFront.getCurrentPosition()<encoderDrivingTarget||rightFront.getCurrentPosition()<encoderDrivingTarget){
-            int zAngle = MR_Gyro.getIntegratedZValue();
+            while(leftFront.getCurrentPosition()<encoderDrivingTarget||rightFront.getCurrentPosition()<encoderDrivingTarget){
+                int zAngle = MR_Gyro.getIntegratedZValue();
 
-            leftPower = speed + (zAngle - target)/100;
-            rightPower = speed - (zAngle - target)/100;
+                leftPower = speed + (zAngle - target)/100;
+                rightPower = speed - (zAngle - target)/100;
 
-            leftPower = Range.clip(leftPower, -1, 1);
-            rightPower = Range.clip(rightPower, -1, 1);
+                leftPower = Range.clip(leftPower, -1, 1);
+                rightPower = Range.clip(rightPower, -1, 1);
 
-            leftFront.setTargetPosition(encoderDrivingTarget);
-            leftBack.setTargetPosition(encoderDrivingTarget);
-            rightFront.setTargetPosition(encoderDrivingTarget);
-            rightBack.setTargetPosition(encoderDrivingTarget);
+                leftFront.setTargetPosition(encoderDrivingTarget);
+                leftBack.setTargetPosition(encoderDrivingTarget);
+                rightFront.setTargetPosition(encoderDrivingTarget);
+                rightBack.setTargetPosition(encoderDrivingTarget);
 
-            leftFront.setPower(leftPower);
-            leftBack.setPower(leftPower);
-            rightFront.setPower(rightPower);
-            rightBack.setPower(rightPower);
+                leftFront.setPower(leftPower);
+                leftBack.setPower(leftPower);
+                rightFront.setPower(rightPower);
+                rightBack.setPower(rightPower);
 
-            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            if(leftFront.getCurrentPosition()>encoderDrivingTarget*0.85){
-                leftFront.setPower(0.3);
-                leftBack.setPower(0.3);
-                rightFront.setPower(0.3);
-                rightBack.setPower(0.3);
+                if(leftFront.getCurrentPosition()>encoderDrivingTarget*0.85){
+                    leftFront.setPower(0.3);
+                    leftBack.setPower(0.3);
+                    rightFront.setPower(0.3);
+                    rightBack.setPower(0.3);
+
+                }
 
             }
-
-        }
-        zero();
+                zero();
 
 
     }
 
     public void MR_gyroreverse(double inches, double speed){
 
-        // leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double leftPower;
-        double rightPower;
-        int target = 0;
+            double leftPower;
+            double rightPower;
+            int target = 0;
 
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+            rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double rotationsNeeded = inches/CIRCUMFERENCE;
-        int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
+            double rotationsNeeded = inches/CIRCUMFERENCE;
+            int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
 
-        while(leftFront.getCurrentPosition()>-encoderDrivingTarget||rightFront.getCurrentPosition()>-encoderDrivingTarget){
-            int zAngle = MR_Gyro.getIntegratedZValue();
+            while(leftFront.getCurrentPosition()>-encoderDrivingTarget||rightFront.getCurrentPosition()>-encoderDrivingTarget){
+                int zAngle = MR_Gyro.getIntegratedZValue();
 
-            leftPower = -speed + (zAngle - target)/100;
-            rightPower = -speed - (zAngle - target)/100;
+                leftPower = -speed + (zAngle - target)/100;
+                rightPower = -speed - (zAngle - target)/100;
 
-            leftPower = Range.clip(leftPower, -1, 1);
-            rightPower = Range.clip(rightPower, -1, 1);
+                leftPower = Range.clip(leftPower, -1, 1);
+                rightPower = Range.clip(rightPower, -1, 1);
 
-            leftFront.setTargetPosition(-encoderDrivingTarget);
-            leftBack.setTargetPosition(-encoderDrivingTarget);
-            rightFront.setTargetPosition(-encoderDrivingTarget);
-            rightBack.setTargetPosition(-encoderDrivingTarget);
+                leftFront.setTargetPosition(-encoderDrivingTarget);
+                leftBack.setTargetPosition(-encoderDrivingTarget);
+                rightFront.setTargetPosition(-encoderDrivingTarget);
+                rightBack.setTargetPosition(-encoderDrivingTarget);
 
-            leftFront.setPower(leftPower);
-            leftBack.setPower(leftPower);
-            rightFront.setPower(rightPower);
-            rightBack.setPower(rightPower);
+                leftFront.setPower(leftPower);
+                leftBack.setPower(leftPower);
+                rightFront.setPower(rightPower);
+                rightBack.setPower(rightPower);
 
-            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        zero();
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                zero();
+                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void calibrate_MRgyro(){
@@ -646,6 +713,21 @@ public class  HardwareTestbot
     //     leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     //     rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     //     rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    // }
+
+    // public void Init_IMU() {
+    //     BNO055IMU.Parameters IMUparameters;
+
+    //     // Create a new IMU parameters object
+    //     IMUparameters = new BNO055IMU.Parameters();
+    //     // Set the IMU mode to IMU so it automatically calibrates itself
+    //     IMUparameters.mode = BNO055IMU.SensorMode.IMU;
+    //     // Use degrees as our angle unit
+    //     IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    //     // Use meters per second as a unit of acceleration
+    //     IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    //     // Intialize IMU using these parameters
+    //     imu.initialize(IMUparameters);
     // }
 
     // public void rotateCCW(double targetOrientationAngle) {
