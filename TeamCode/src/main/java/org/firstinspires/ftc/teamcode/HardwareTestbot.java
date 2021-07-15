@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 
-public class HardwareTestbot
+public class  HardwareTestbot
 {
     /* Public OpMode members. */
     public DcMotor  leftFront = null;
@@ -41,7 +41,9 @@ public class HardwareTestbot
     public ModernRoboticsI2cRangeSensor rangeFront = null;
     public ModernRoboticsI2cRangeSensor rangeBack = null;
     public ModernRoboticsI2cGyro MR_Gyro = null;
+    public BNO055IMU imu = null;
 
+    public Orientation angles;
     public float zOrientation;
     public static double globalAngle;
     public static final double ONEONEFIVEZERO_MOTOR_TICK_COUNT = 145.6;
@@ -147,83 +149,14 @@ public class HardwareTestbot
         gripper.setPosition(0);
         pusher.setPosition(0.41);
 
-
-
-
-
-
-
-        //// BNO055IMU.Parameters IMUparameters;
-
-        // Create a new IMU parameters object
-        //// IMUparameters = new BNO055IMU.Parameters();
-        // Set the IMU mode to IMU so it automatically calibrates itself
-        //// IMUparameters.mode = BNO055IMU.SensorMode.IMU;
-        // Use degrees as our angle unit
-        //// IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        // Use meters per second as a unit of accelerat
-        //// IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        // Warn driver this may take several seconds!
-        // telemetry.addData("Status", "Init IMU...please wait");
-        // telemetry.update();
-        // Intialize IMU using these parameters
-        //// imu.initialize(IMUparameters);
-        // Tell drive that init is done
-        // telemetry.addData("Status", "IMU initialized");
-        // telemetry.update();
-
-        //Init_IMU();
+    public void initialize_IMU() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        imu.initialize(parameters);
     }
 
-    public void init_IMU() {
-
-        BNO055IMU.Parameters IMUparameters;
-
-        // Create a new IMU parameters object
-        IMUparameters = new BNO055IMU.Parameters();
-        // Set the IMU mode to IMU so it automatically calibrates itself
-        IMUparameters.mode = BNO055IMU.SensorMode.IMU;
-        // Use degrees as our angle unit
-        IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        // Use meters per second as a unit of acceleration
-        IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        // Warn driver this may take several seconds!
-        // telemetry.addData("Status", "Init IMU...please wait");
-        // telemetry.update();
-        // Intialize IMU using these parameters
-        // Tell drive that init is done
-        // telemetry.addData("Status", "IMU initialized");
-        // telemetry.update();
-    }
-
-    //public void init(InitIMU imuInit) {
-    /* code */
-
-    //InitIMU = imuInit;
-    BNO055IMU.Parameters IMUparameters;
-
-    // // Create a new IMU parameters object
-    // IMUparameters = new BNO055IMU.Parameters();
-    // // Set the IMU mode to IMU so it automatically calibrates itself
-    // IMUparameters.mode = BNO055IMU.SensorMode.IMU;
-    // // Use degrees as our angle unit
-    // IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-    // // Use meters per second as a unit of acceleration
-    // IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-    // // Warn driver this may take several seconds!
-    // // telemetry.addData("Status", "Init IMU...please wait");
-    // // telemetry.update();
-    // // Intialize IMU using these parameters
-    // imu.initialize(IMUparameters);
-    // // Tell drive that init is done
-    // // telemetry.addData("Status", "IMU initialized");
-    // // telemetry.update();
-
-    // Init_IMU();
-
-    // Get the Z axis orientation of the IMU
-
-    public void gyro_leftstrafe(double speed){
+    public void gyro_leftstrafe(double speed) {
 
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -278,7 +211,7 @@ public class HardwareTestbot
         }
     }
 
-    public void gyro_rightstrafe(double speed){
+    public void gyro_rightstrafe(double speed) {
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -713,21 +646,6 @@ public class HardwareTestbot
     //     leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     //     rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     //     rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    // }
-
-    // public void Init_IMU() {
-    //     BNO055IMU.Parameters IMUparameters;
-
-    //     // Create a new IMU parameters object
-    //     IMUparameters = new BNO055IMU.Parameters();
-    //     // Set the IMU mode to IMU so it automatically calibrates itself
-    //     IMUparameters.mode = BNO055IMU.SensorMode.IMU;
-    //     // Use degrees as our angle unit
-    //     IMUparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-    //     // Use meters per second as a unit of acceleration
-    //     IMUparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-    //     // Intialize IMU using these parameters
-    //     imu.initialize(IMUparameters);
     // }
 
     // public void rotateCCW(double targetOrientationAngle) {
