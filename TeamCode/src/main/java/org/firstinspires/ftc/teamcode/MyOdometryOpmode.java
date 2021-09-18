@@ -26,7 +26,7 @@ public class MyOdometryOpmode extends LinearOpMode {
     final double TICKS_PER_INCH = robot.ONEONEFIVEZERO_MOTOR_TICK_COUNT/robot.CIRCUMFERENCE*2;
 
     //Hardware Map Names for drive motors and odometry wheels. THIS WILL CHANGE ON EACH ROBOT, YOU NEED TO UPDATE THESE VALUES ACCORDINGLY
-    String rfName = "rf", rbName = "rb", lfName = "lf", lbName = "lb";
+    String rfName = "frontR", rbName = "backR", lfName = "frontL", lbName = "backL";
     String verticalLeftEncoderName = rbName, verticalRightEncoderName = lfName, horizontalEncoderName = rfName;
 
 

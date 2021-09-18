@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 
 
 /*
@@ -12,60 +15,74 @@ Logic for the encoder incremental movement for Sat.
  */
 
 
-@TeleOp(name="Ball intake", group="TestBot")
-@Disabled
-public class linearactuator extends OpMode {
+@TeleOp(name="linear actuator", group="TestBot")
+//@Disabled
+public class linearactuator extends LinearOpMode {
     testbotdjaoiwejfae robot = new testbotdjaoiwejfae();
 
-    public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+
+    //HardwareTestbot         robot   = new HardwareTestbot();   // Use a Pushbot's hardware
+   // private ElapsedTime     runtime = new ElapsedTime();
+
+    @Override
+    public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        int encoderDegreesToAttain = 1000;
+        double minPower = 0.01;
+        double maxPower = 0.5;
+        PController pController = new PController(0.03);
+        pController.setInputRange(50, 500);
+        pController.setSetPoint(encoderDegreesToAttain);
+        pController.setOutputRange(minPower, maxPower);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");
-    }
+        robot.linearactuator1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.linearactuator1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-    @Override
-    public void init_loop() {
-    }
+        waitForStart();
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-        robot.linearactuator1.setPower(0);
 
-    }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+        while(opModeIsActive()) {
 
-    private void WaitAndPower(int miliseconds){
+            double left;
+            double right;
 
-        double currentTime = getRuntime();
-        double waitUntil = currentTime + (double)(miliseconds/1000);
-        while (getRuntime() < waitUntil){
-            robot.linearactuator1.setPower(0.1);
+             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
+
+            robot.linearactuator1.setPower(left);
+
+            // Send telemetry message to signify robot running;
+            telemetry.addData("position", robot.linearactuator1.getCurrentPosition());
+            telemetry.addData("left",  "%.2f", left);
+            telemetry.addData("right", "%.2f", right);
+            telemetry.update();
+
+            if(gamepad1.a){
+                robot.verticalservo.setPosition(robot.verticalservo.getPosition()+0.05);
+            }
+
+            if(gamepad1.b){
+                robot.verticalservo.setPosition(robot.verticalservo.getPosition()-0.05);
+            }
+
+            if(gamepad1.x){
+                robot.horizontalservo.setPosition(robot.horizontalservo.getPosition()+0.05);
+            }
+
+            if(gamepad1.y){
+                robot.horizontalservo.setPosition(robot.horizontalservo.getPosition()-0.05);
+            }
+
+
+
+
+
         }
-
     }
-    @Override
-    public void loop() {
-        if(gamepad1.a) {
-            WaitAndPower(5000);
-
-        }
-
-    }
-
-    @Override
-    public void stop() {
-    }
-
-
-
 }
+
+
+
+
