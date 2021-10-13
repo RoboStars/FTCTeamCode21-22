@@ -521,6 +521,37 @@ public class HardwareTestbot
 
     }
 
+    public void Move_Backward(double inches, double power){
+
+        // leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        // leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        // rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+        // rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODERS);
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double rotationsNeeded = inches/CIRCUMFERENCE;
+        int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
+
+        leftFront.setTargetPosition(-encoderDrivingTarget);
+        leftBack.setTargetPosition(-encoderDrivingTarget);
+        rightFront.setTargetPosition(-encoderDrivingTarget);
+        rightBack.setTargetPosition(-encoderDrivingTarget);
+
+        leftFront.setPower(-power);
+        leftBack.setPower(-power);
+        rightFront.setPower(-power);
+        rightBack.setPower(-power);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
 //    public void MR_gyrostraight(double inches, double speed){
 //
 //        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

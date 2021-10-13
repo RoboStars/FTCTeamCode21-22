@@ -127,7 +127,7 @@ public class Auto_Blue  extends OpMode {
                 //power off motors
                 robot.zero();
                 //moves toward carousel
-                robot.Move_Forward(32,0.5);
+                robot.Move_Backward(32,0.5);
                 // next state
                 newState(State.SPIN_CAROUSEL);
 
