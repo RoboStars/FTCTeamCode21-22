@@ -27,10 +27,10 @@ import android.view.View;
 import java.util.Locale;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 
-@Autonomous(name="auto blue (carousel)", group="TestBot") //Aarav Jagtiani, Rishabh Mahesh
+@Autonomous(name="auto blue (remote)", group="TestBot") //Aarav Jagtiani, Rishabh Mahesh
 // simple auto
 // robot senses barcode, drops preload element in correct level, spins duck off carousel, park in warehouse
-public class Auto_Blue  extends OpMode {
+public class Auto_Blue_Remote extends OpMode {
     HardwareTestbot         robot   = new HardwareTestbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 

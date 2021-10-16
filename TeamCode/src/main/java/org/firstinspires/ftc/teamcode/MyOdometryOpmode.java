@@ -49,6 +49,26 @@ public class MyOdometryOpmode extends LinearOpMode {
 
 
         while(opModeIsActive()){
+
+            if(gamepad1.a) {
+                horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                horizontal.setTargetPosition(-20);
+
+
+                while(horizontal.getCurrentPosition()>horizontal.getTargetPosition()){
+                    robot.strafe_left(0.3);
+                    telemetry.addData("Vertical left encoder position", verticalLeft.getCurrentPosition());
+                    telemetry.addData("Vertical right encoder position", verticalRight.getCurrentPosition());
+                    telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
+                }
+
+                robot.zero();
+                telemetry.addData("Vertical left encoder position", verticalLeft.getCurrentPosition());
+                telemetry.addData("Vertical right encoder position", verticalRight.getCurrentPosition());
+                telemetry.addData("horizontal encoder position", horizontal.getCurrentPosition());
+
+            }
+
             //Display Global (x, y, theta) coordinates
             telemetry.addData("X Position", globalPositionUpdate.returnXCoordinate() / TICKS_PER_INCH);
             telemetry.addData("Y Position", globalPositionUpdate.returnYCoordinate() / TICKS_PER_INCH);
@@ -113,7 +133,6 @@ public class MyOdometryOpmode extends LinearOpMode {
 
             double pivotCorrection = finalOrientation - globalPositionUpdate.returnOrientation();
 
-            //Move Robot
             moveHolonomic(robotMovmentYComponent,robotMovmentXComponent,pivotCorrection);
 
             distance = Math.hypot(distanceToXTarget, distanceToYTarget);
