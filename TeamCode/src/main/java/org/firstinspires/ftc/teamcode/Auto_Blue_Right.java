@@ -176,6 +176,8 @@ public class Auto_Blue_Right extends OpMode {
                 break;
 
             case BACK_INTO_STORAGE:
+
+                // reset encoders.
                 robot.reset_encoder();
                 while(robot.rightFront.getCurrentPosition()<600) {
                     robot.backward(0.3);
