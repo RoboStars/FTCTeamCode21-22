@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name="TestBot: Test3", group="TestBot")
+@TeleOp(name="freight", group="TestBot")
 
 public class teleopfreight extends OpMode {
     HardwareTestbot robot = new HardwareTestbot();
