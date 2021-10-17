@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class teleopfreight extends OpMode {
     HardwareTestbot robot = new HardwareTestbot();
-
+//encoder 138-140
 
     @Override
     public void init() {
@@ -61,14 +61,20 @@ public class teleopfreight extends OpMode {
 
         //Strafe Left
         if(gamepad1.left_bumper){
-            robot.leftFront.setPower(robot.ONE);
-            robot.leftBack.setPower(-robot.ONE);
+            robot.leftFront.setPower(-robot.ONE);
+            robot.leftBack.setPower(robot.ONE);
             robot.rightFront.setPower(robot.ONE);
-            robot.rightBack.setPower(robot.ONE);
+            robot.rightBack.setPower(-robot.ONE);
         }
 
+
         if(gamepad1.a){
+            robot.carousel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.carousel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.carousel.setPower(0.3);
+            robot.carousel.setTargetPosition(140);
+
+
         }
 
         if(gamepad1.b){
@@ -79,9 +85,9 @@ public class teleopfreight extends OpMode {
         //Strafe Right
         if(gamepad1.right_bumper){
             robot.leftFront.setPower(robot.ONE);
-            robot.leftBack.setPower(robot.ONE);
-            robot.rightFront.setPower(robot.ONE);
-            robot.rightBack.setPower(-robot.ONE);
+            robot.leftBack.setPower(-robot.ONE);
+            robot.rightFront.setPower(-robot.ONE);
+            robot.rightBack.setPower(robot.ONE);
         }
 
 
