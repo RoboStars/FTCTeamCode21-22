@@ -48,7 +48,9 @@ public class Corehex extends LinearOpMode {
         waitForStart();
 
         runhex(1, 0.4);
-
+        telemetry.addData("encoder position", corehex.getCurrentPosition());
+        telemetry.update();
+        telemetry.setAutoClear(false);
 
 
 
@@ -62,6 +64,7 @@ public class Corehex extends LinearOpMode {
         corehex.setPower(power);
         corehex.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         corehex.setPower(0);
+
 
 
 
