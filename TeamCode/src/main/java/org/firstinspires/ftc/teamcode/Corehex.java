@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /*
-Logic for the encoder incremental movement for Sat.
+Logic for the encoder incremental movement for corehex
 
 
  */
