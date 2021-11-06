@@ -64,6 +64,8 @@ public class HardwareTestbot
     public final static double ARM_HOME = 0.0; // Starting position
     public final static double ARM_MIN_RANGE = 0.0; // Smallest number value allowed for servo position
     public final static double ARM_MAX_RANGE = 1.0; // Larget number value allowed for servo position
+    public ModernRoboticsI2cGyro MR_Gyro = null;
+    private BNO055IMU imu;
 
 
 
@@ -552,6 +554,253 @@ public class HardwareTestbot
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
+    public void turn_right(double power) {
+        rightFront.setPower(power);
+    }
+    public void turn_left(double power) {
+        leftFront.setPower(power);
+    }
+
+    public void move_motor(double speed) {
+        leftFront.setPower(-speed);
+        leftBack.setPower(speed);
+        rightFront.setPower(speed);
+        rightBack.setPower(-speed);
+    }
+
+    public void gyro_leftstrafe(double speed) {
+
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+
+        // double rotationsNeeded = inches/CIRCUMFERENCE;
+        // int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
+
+        int zAngle = MR_Gyro.getIntegratedZValue();
+
+        // leftFront.setTargetPosition(-encoderDrivingTarget);
+        // leftBack.setTargetPosition(encoderDrivingTarget);
+        // rightFront.setTargetPosition(encoderDrivingTarget);
+        // rightBack.setTargetPosition(-encoderDrivingTarget);
+
+        leftFront.setPower(-speed);
+        leftBack.setPower(speed);
+        rightFront.setPower(speed);
+        rightBack.setPower(-speed);
+
+        // leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftFront.isBusy() || rightFront.isBusy()) {
+            if (zAngle == 0) {
+                leftFront.setPower(-speed);
+                leftBack.setPower(speed);
+                rightFront.setPower(speed);
+                rightBack.setPower(-speed);
+            } else if (zAngle > 0) {
+                leftFront.setPower(-speed - zOrientation / 100);
+                leftBack.setPower(speed + zOrientation / 100);
+                rightFront.setPower(speed);
+                rightBack.setPower(-speed);
+            } else if (zAngle < 0) {
+                leftFront.setPower(-speed);
+                leftBack.setPower(speed);
+                rightFront.setPower(speed + zOrientation / 100);
+                rightBack.setPower(-speed - zOrientation / 100);
+            }
+        }
+    }
+
+    public void gyro_rightstrafe(double speed) {
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        // rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+
+        // double rotationsNeeded = inches/CIRCUMFERENCE;
+        // int encoderDrivingTarget = (int) (rotationsNeeded*ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
+
+        // init_IMU();
+
+        int zAngle = MR_Gyro.getIntegratedZValue();
+
+        // leftFront.setTargetPosition(encoderDrivingTarget);
+        // leftBack.setTargetPosition(-encoderDrivingTarget);
+        // rightFront.setTargetPosition(-encoderDrivingTarget);
+        // rightBack.setTargetPosition(encoderDrivingTarget);
+
+        leftFront.setPower(speed);
+        leftBack.setPower(-speed);
+        rightFront.setPower(-speed);
+        rightBack.setPower(speed);
+
+        // leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftFront.isBusy() || rightFront.isBusy()) {
+            if (zAngle == 0) {
+                leftFront.setPower(speed);
+                leftBack.setPower(-speed);
+                rightFront.setPower(-speed);
+                rightBack.setPower(speed);
+            } else if (zAngle > 0) {
+                leftFront.setPower(speed + zOrientation / 100);
+                leftBack.setPower(-speed - zOrientation / 100);
+                rightFront.setPower(-speed);
+                rightBack.setPower(speed);
+            } else if (zAngle < 0) {
+                leftFront.setPower(speed);
+                leftBack.setPower(-speed);
+                rightFront.setPower(-speed - zOrientation / 100);
+                rightBack.setPower(speed + zOrientation / 100);
+            }
+        }
+    }
+    public double getHeading(AngleUnit angleUnit) {
+        Orientation angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, angleUnit);
+        return angles.firstAngle;
+    }
+
+
+
+    public void MR_gyrostraight(double inches, double speed) {
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        double leftPower;
+        double rightPower;
+        int target = 0;
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double rotationsNeeded = inches / CIRCUMFERENCE;
+        int encoderDrivingTarget = (int) (rotationsNeeded * ONEONEFIVEZERO_MOTOR_TICK_COUNT * 2);
+
+        while (leftFront.getCurrentPosition() < encoderDrivingTarget || rightFront.getCurrentPosition() < encoderDrivingTarget) {
+            int zAngle = MR_Gyro.getIntegratedZValue();
+
+            leftPower = speed + (zAngle - target) / 100;
+            rightPower = speed - (zAngle - target) / 100;
+
+            leftPower = Range.clip(leftPower, -1, 1);
+            rightPower = Range.clip(rightPower, -1, 1);
+
+            leftFront.setTargetPosition(encoderDrivingTarget);
+            leftBack.setTargetPosition(encoderDrivingTarget);
+            rightFront.setTargetPosition(encoderDrivingTarget);
+            rightBack.setTargetPosition(encoderDrivingTarget);
+
+            leftFront.setPower(leftPower);
+            leftBack.setPower(leftPower);
+            rightFront.setPower(rightPower);
+            rightBack.setPower(rightPower);
+
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            if (leftFront.getCurrentPosition() > encoderDrivingTarget * 0.85) {
+                leftFront.setPower(0.3);
+                leftBack.setPower(0.3);
+                rightFront.setPower(0.3);
+                rightBack.setPower(0.3);
+
+            }
+
+        }
+        zero();
+
+
+    }
+
+    public void MR_gyroreverse(double inches, double speed) {
+
+        // leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        double leftPower;
+        double rightPower;
+        int target = 0;
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets the counter of ticks to 0
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double rotationsNeeded = inches / CIRCUMFERENCE;
+        int encoderDrivingTarget = (int) (rotationsNeeded * ONEONEFIVEZERO_MOTOR_TICK_COUNT * 2);
+
+        while (leftFront.getCurrentPosition() > -encoderDrivingTarget || rightFront.getCurrentPosition() > -encoderDrivingTarget) {
+            int zAngle = MR_Gyro.getIntegratedZValue();
+
+            leftPower = -speed + (zAngle - target) / 100;
+            rightPower = -speed - (zAngle - target) / 100;
+
+            leftPower = Range.clip(leftPower, -1, 1);
+            rightPower = Range.clip(rightPower, -1, 1);
+
+            leftFront.setTargetPosition(-encoderDrivingTarget);
+            leftBack.setTargetPosition(-encoderDrivingTarget);
+            rightFront.setTargetPosition(-encoderDrivingTarget);
+            rightBack.setTargetPosition(-encoderDrivingTarget);
+
+            leftFront.setPower(leftPower);
+            leftBack.setPower(leftPower);
+            rightFront.setPower(rightPower);
+            rightBack.setPower(rightPower);
+
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        zero();
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
+    public void calibrate_MRgyro() {
+
+        MR_Gyro.calibrate();
+
+        while (MR_Gyro.isCalibrating()) {
+
+        }
+    }
+
 //    public void MR_gyrostraight(double inches, double speed){
 //
 //        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
