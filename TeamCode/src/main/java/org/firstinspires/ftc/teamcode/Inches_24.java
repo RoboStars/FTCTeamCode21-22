@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Autonomous(name="TestBot: 18inches", group="TestBot")
 
-public class Inches_18 extends LinearOpMode {
+public class Inches_24 extends LinearOpMode {
     HardwareTestbot         robot   = new HardwareTestbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
     // todo: write your code here
