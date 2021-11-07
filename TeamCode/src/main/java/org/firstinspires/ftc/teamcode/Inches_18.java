@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Autonomous(name="TestBot: 18inches", group="TestBot")
@@ -16,6 +17,8 @@ public class Inches_18 extends LinearOpMode {
     // todo: write your code here
 
     double A, B, C, D;
+    double base_degrees;
+    double last_time;
 
     @Override
     public void runOpMode() {
@@ -25,6 +28,42 @@ public class Inches_18 extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".4
+        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+
+        telemetry.addData("Gyro Initializiation Status: ", imu.isGyroCalibrated());
+        telemetry.update();
+        try {
+            sleep(50);
+        } catch(Exception e) { }
+        while(!imu.isGyroCalibrated()) {
+            telemetry.addData("Gyro Initializiation Status: ", imu.isGyroCalibrated());
+            telemetry.update();
+            try {
+                sleep(50);
+            } catch (Exception e) {}
+        }
+
+        telemetry.addData("Gyro Initializiation Status: ", imu.isGyroCalibrated());
+        telemetry.addData("Current Gyro Heading: ", robot.getHeading(AngleUnit.DEGREES));
+        telemetry.update();
+
+        base_degrees = robot.getHeading(AngleUnit.DEGREES);
+        last_time = getRuntime();
+
         A = robot.leftFront.getCurrentPosition();
         B = robot.rightFront.getCurrentPosition();
         C = robot.leftBack.getCurrentPosition();

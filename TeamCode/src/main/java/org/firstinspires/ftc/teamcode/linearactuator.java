@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 
+
 /*
 Logic for the encoder incremental movement for Sat.
 
