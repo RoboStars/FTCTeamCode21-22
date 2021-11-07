@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @Autonomous(name="TestBot: 18inches", group="TestBot")
 
 public class Inches_18 extends LinearOpMode {
@@ -67,37 +69,40 @@ public class Inches_18 extends LinearOpMode {
         sleep(1000);
         //print zero
 
-        double rotationsNeeded = 17.5/CIRCUMFERENCE;
+        double rotationsNeeded = 23.5/CIRCUMFERENCE;
         int encoderDrivingTarget = (int) (rotationsNeeded*robot.ONEONEFIVEZERO_MOTOR_TICK_COUNT*2);
 
-        robot.leftFront.setTargetPosition(encoderDrivingTarget);
-        robot.leftBack.setTargetPosition(encoderDrivingTarget);
-        robot.rightFront.setTargetPosition(encoderDrivingTarget);
-        robot.rightBack.setTargetPosition(encoderDrivingTarget);
+        while (robot.leftFront.getCurrentPosition() <= encoderDrivingTarget){
+            if (robot.getHeading(AngleUnit.DEGREES) > -1 && robot.getHeading(AngleUnit.DEGREES) < 1) {
+                robot.forward(0.1);
+                telemetry.addData("Current State: ", "Straight");
+                telemetry.update();
+            } else {
+                if (robot.getHeading(AngleUnit.DEGREES) < -1) {
+                    robot.turn_right(0.5);
+                    telemetry.addData("Current State: ", "Turning Left");
+                    telemetry.addData("Current Angle: ", robot.getHeading(AngleUnit.DEGREES));
+                    telemetry.update();
 
-        robot.leftFront.setPower(robot.POINT_FOUR);
-        robot.leftBack.setPower(robot.POINT_FOUR);
-        robot.rightFront.setPower(robot.POINT_FOUR);
-        robot.rightBack.setPower(robot.POINT_FOUR);
+                }
+                if (robot.getHeading(AngleUnit.DEGREES) > 1) {
+                    robot.turn_left(0.5);
+                    telemetry.addData("Current Angle: ", robot.getHeading(AngleUnit.DEGREES));
+                    telemetry.addData("Current State: ", "Turning Right");
+                    telemetry.update();
+                }
+            }
 
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            telemetry.addData("left front", robot.leftFront.getCurrentPosition());
+            telemetry.addData("right front", robot.rightFront.getCurrentPosition());
+            telemetry.addData("left back", robot.leftBack.getCurrentPosition());
+            telemetry.addData("right back", robot.rightBack.getCurrentPosition());
+            telemetry.update();
 
-        while(robot.leftFront.isBusy() || robot.rightFront.isBusy()){
 
         }
-        A = robot.leftFront.getCurrentPosition();
-        B = robot.rightFront.getCurrentPosition();
-        C = robot.leftBack.getCurrentPosition();
-        D = robot.rightBack.getCurrentPosition();
 
-        telemetry.addData("left front encoder", "%.2f", A);
-        telemetry.addData("right front encoder", "%.2f", B);
-        telemetry.addData("left back encoder", "%.2f", C);
-        telemetry.addData("right back encoder", "%.2f", D);
-        sleep(2000);
+        robot.zero();
 
         // print encoder value
 

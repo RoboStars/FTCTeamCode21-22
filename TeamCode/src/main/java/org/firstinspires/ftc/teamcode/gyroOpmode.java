@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -72,24 +72,23 @@ public class gyroOpmode extends OpMode {
 
         last_time = getRuntime();
         if (bot.getHeading(AngleUnit.DEGREES) > -1 && bot.getHeading(AngleUnit.DEGREES) < 1 ) {
-            bot.forward(0.1);
-            telemetry.addData("Current State: ", "Straight");
-            telemetry.update();
-        } else {
-            if (bot.getHeading(AngleUnit.DEGREES) < -1) {
-                bot.turn_right(0.5);
-                telemetry.addData("Current State: ", "Turning Left");
-                telemetry.addData("Current Angle: ", bot.getHeading(AngleUnit.DEGREES));
+                bot.forward(0.1);
+                telemetry.addData("Current State: ", "Straight");
                 telemetry.update();
+            } else {
+                if (bot.getHeading(AngleUnit.DEGREES) < -1) {
+                    bot.turn_right(0.5);
+                    telemetry.addData("Current State: ", "Turning Left");
+                    telemetry.addData("Current Angle: ", bot.getHeading(AngleUnit.DEGREES));
+                    telemetry.update();
 
-            }
-            if (bot.getHeading(AngleUnit.DEGREES) > 1) {
-                bot.turn_left(0.5);
-                telemetry.addData("Current Angle: ", bot.getHeading(AngleUnit.DEGREES));
-                telemetry.addData("Current State: ", "Turning Right");
-                telemetry.update();
-            }
+                }
+                if (bot.getHeading(AngleUnit.DEGREES) > 1) {
+                    bot.turn_left(0.5);
+                    telemetry.addData("Current Angle: ", bot.getHeading(AngleUnit.DEGREES));
+                    telemetry.addData("Current State: ", "Turning Right");
+                    telemetry.update();
+                }
         }
     }
 }
- */

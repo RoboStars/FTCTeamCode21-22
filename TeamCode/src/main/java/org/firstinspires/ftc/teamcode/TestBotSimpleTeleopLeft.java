@@ -41,8 +41,8 @@ public class TestBotSimpleTeleopLeft extends OpMode {
         
         
         
-        rightFront.setDirection(DcMotor.Direction.FORWARD); 
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
         
        
        
